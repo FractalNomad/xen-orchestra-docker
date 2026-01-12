@@ -39,6 +39,8 @@ jobs:
         id: xo-version
         run: |
           echo "XO_VERSION=$(curl -s https://raw.githubusercontent.com/vatesfr/xen-orchestra/master/packages/xo-server/package.json | jq -r .version)" >> $GITHUB_ENV
+          echo "REPO_OWNER_LOWER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          echo "REPO_NAME_LOWER=$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Build image and push
         uses: docker/build-push-action@v6
@@ -47,5 +49,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
-            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ env.XO_VERSION }}
+            ghcr.io/${{ env.REPO_OWNER_LOWER }}/${{ env.REPO_NAME_LOWER }}:latest
+            ghcr.io/${{ env.REPO_OWNER_LOWER }}/${{ env.REPO_NAME_LOWER }}:${{ env.XO_VERSION }}
